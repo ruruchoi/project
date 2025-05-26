@@ -15,5 +15,5 @@ if st.button('다음'):
     num = randint(min_num, max_num)
     st.markdown(f"숫자는 {min_num}~{max_num}사이에 있습니다.")
     while True:
-      num_input = st.number_input(f"{attempt}번째 시도", min_value=min_num, max_value=max_num, step=1)
+      num_input = st.number_input(f"{attempt}번째 시도", min_value = min_num, max_value = max_num, step=1)
   
