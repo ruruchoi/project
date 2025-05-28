@@ -25,6 +25,10 @@ def check(mission, guess, digits):
             print(f"{i + 1}번 숫자 : 틀렸어요!")
     return correct
 
+#미션 단어 생성
+def make_word():
+    
+
 game_mode = input("원하시는 게임을 선택해 주세요")
 
 
@@ -54,6 +58,11 @@ if game_mode == "숫자":
             break
 else:
     while True:
-        #영어 단어 결정
-        
-        
+        attempt = 0
+        mission_word = make_word()
+        print(f"알파벳 {len(mission_word)}개로 이루어진 단어입니다.")
+        while True:
+            attempt += 1
+            my_guess = (input(f"{attempt}번째 시도 : "))
+            #영어 형태 확인
+            
