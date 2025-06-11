@@ -46,6 +46,8 @@ def check(mission, guess):
     return result, correct
 
 # 초기 세션 상태 설정
+# **매우 중요**: 이 초기화 블록은 스크립트 실행 초기에 단 한 번만 효과적으로 실행되어야 합니다.
+# clear_session_state=True 로 리셋될 때도 이 블록이 다시 실행됩니다.
 if 'game_mode' not in st.session_state:
     st.session_state.game_mode = None
 if 'mission' not in st.session_state:
@@ -61,23 +63,28 @@ if 'selected_length' not in st.session_state:
 st.title("🎮 숫자/영어 추측 게임")
 st.markdown("정답을 맞힐 때까지 숫자나 영어 단어를 추측해보세요! 각 문자에 대한 피드백을 받습니다.")
 
-# 리셋 버튼 (수정된 부분: st.stop() 추가)
+# 리셋 버튼
 if st.button("🔄 게임 리셋", help="현재 진행 중인 게임을 리셋하고 초기화합니다."):
     st.rerun(clear_session_state=True)
-    st.stop() # <-- 이 부분을 추가하여 현재 스크립트 실행을 즉시 중단합니다.
+    st.stop() # 현재 스크립트 실행을 중단하고 재실행을 기다립니다.
 
 # 게임 모드 선택
-if st.session_state.game_mode is None:
+# 여기가 79번 줄이라고 가정했을 때,
+# 이 `if/else` 블록에 진입하기 전에 `st.session_state.game_mode`가 유효함을 보장해야 합니다.
+if st.session_state.game_mode is None: # 만약 game_mode가 None이면 모드 선택 UI를 보여줍니다.
     st.markdown("---")
     st.subheader("게임 모드 선택")
     col1, col2 = st.columns(2)
     with col1:
         if st.button("🔢 숫자 모드", use_container_width=True):
-            st.session_state.game_mode = "숫자"
+            st.session_state.game_mode = "숫자" # <- 여기가 79번 줄일 수 있습니다.
+            # 버튼 클릭은 Streamlit에 의해 자동 재실행을 유발합니다.
+            # 이때 st.session_state.game_mode는 이미 '숫자'로 설정됩니다.
     with col2:
         if st.button("🔠 영어 모드", use_container_width=True):
-            st.session_state.game_mode = "영어"
-else: # <-- 이 부분이 오류를 발생시키는 79번째 줄이라고 가정합니다.
+            st.session_state.game_mode = "영어" # <- 혹은 여기가 79번 줄일 수 있습니다.
+            # 이 경우에도 마찬가지입니다.
+else: # <-- 이 else 블록 진입 시 오류 발생 가능성
     st.markdown(f"### 현재 모드: **{st.session_state.game_mode} 추측 게임**")
     
     # 숫자 모드
