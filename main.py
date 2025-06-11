@@ -17,10 +17,8 @@ english_vocab_set = set(english_vocab)
 
 # 숫자 미션 생성 함수
 def make_num(digits):
-    """
-    지정된 자릿수의 고유한 숫자를 생성합니다.
-    (예: 3자릿수 -> '123' 또는 '580')
-    """
+    # 지정된 자릿수의 고유한 숫자를 생성합니다.
+    # (예: 3자릿수 -> '123' 또는 '580')
     num_list = [str(random.randint(1, 9))]
     for _ in range(digits - 1):
         num_list.append(str(random.randint(0, 9)))
@@ -28,12 +26,10 @@ def make_num(digits):
 
 # 정답과 입력 비교 함수
 def check(mission, guess):
-    """
-    주어진 미션(정답)과 추측을 비교하여 각 문자의 상태를 반환합니다.
-    - '맞았어요!': 문자와 위치 모두 일치 (스트라이크)
-    - '다른 자리에 넣어주세요!': 문자는 일치하지만 위치는 다름 (볼)
-    - '틀렸어요!': 문자가 미션에 없음
-    """
+    # 주어진 미션(정답)과 추측을 비교하여 각 문자의 상태를 반환합니다.
+    # - '맞았어요!': 문자와 위치 모두 일치 (스트라이크)
+    # - '다른 자리에 넣어주세요!': 문자는 일치하지만 위치는 다름 (볼)
+    # - '틀렸어요!': 문자가 미션에 없음
     length = len(mission)
     result = [''] * length
     correct = 0
@@ -181,7 +177,7 @@ else:
                         result, correct = check(st.session_state.mission, guess)
                         st.session_state.guess_history.append((guess, result))
                         if correct == st.session_state.selected_length:
-                            st.success(f"🎉 정답입니다! **{st.session_state.mission}**! 총 시도 횟수: {st.session_state.attempt}번")
+                            st.success(f"� 정답입니다! **{st.session_state.mission}**! 총 시도 횟수: {st.session_state.attempt}번")
                             st.balloons()
                             st.session_state.mission = None
                         else:
@@ -207,3 +203,4 @@ if st.session_state.guess_history:
         original_idx = len(st.session_state.guess_history) - 1 - idx
         emoji_summary = "".join([color_map.get(fb, '') for fb in feedback])
         st.markdown(f"**{original_idx + 1}번째 시도: {guess.upper()}** {emoji_summary}")
+�
