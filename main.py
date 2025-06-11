@@ -118,10 +118,11 @@ else:
         
         if st.session_state.mission:
             st.markdown(f"**현재 {st.session_state.selected_length}자릿수 숫자 게임 진행 중입니다.**")
-            # key를 동적으로 변경하여 입력 필드를 초기화
             guess = st.text_input(
                 f"{st.session_state.attempt + 1}번째 시도 (예: {'_' * st.session_state.selected_length})",
-                key=f'guess_num_{st.session_state.attempt}' # <- 이 부분 변경
+                # key를 동적으로 변경하여 입력 필드를 초기화합니다.
+                # 이는 Streamlit이 새 위젯으로 인식하게 하여 이전 값을 지웁니다.
+                key=f'guess_num_{st.session_state.attempt}' 
             )
             if st.button("제출", key='submit_num_guess'):
                 if len(guess) == st.session_state.selected_length and guess.isdigit():
@@ -137,7 +138,7 @@ else:
                             st.session_state.mission = None
                         else:
                             st.info("계속 시도해보세요!")
-                        st.rerun() # <- 제출 후 화면을 갱신하여 입력 필드를 비움
+                        st.rerun() 
                 else:
                     st.warning(f"올바른 {st.session_state.selected_length}자리의 숫자를 입력해주세요.")
 
@@ -166,10 +167,11 @@ else:
 
         if st.session_state.mission:
             st.markdown(f"**현재 {st.session_state.selected_length}자 길이의 영어 단어 게임 진행 중입니다.**")
-            # key를 동적으로 변경하여 입력 필드를 초기화
             guess = st.text_input(
                 f"{st.session_state.attempt + 1}번째 시도 (예: {'_' * st.session_state.selected_length})",
-                key=f'guess_word_{st.session_state.attempt}' # <- 이 부분 변경
+                # key를 동적으로 변경하여 입력 필드를 초기화합니다.
+                # 이는 Streamlit이 새 위젯으로 인식하게 하여 이전 값을 지웁니다.
+                key=f'guess_word_{st.session_state.attempt}' 
             ).lower()
 
             if st.button("제출", key='submit_word_guess'):
@@ -184,7 +186,7 @@ else:
                             st.session_state.mission = None
                         else:
                             st.info("계속 시도해보세요!")
-                        st.rerun() # <- 제출 후 화면을 갱신하여 입력 필드를 비움
+                        st.rerun() 
                     else:
                         st.warning("존재하지 않는 단어입니다. 영어 사전에 있는 단어를 입력해주세요.")
                 else:
