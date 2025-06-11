@@ -74,14 +74,9 @@ st.title("🎮 숫자/영어 추측 게임")
 st.markdown("정답을 맞힐 때까지 숫자나 영어 단어를 추측해보세요! 각 문자에 대한 피드백을 받습니다.")
 
 # 리셋 버튼 (언제나 노출)
-# 이 버튼은 항상 `st.rerun()`을 호출하여 앱을 완전히 초기화합니다.
+# 'clear_session_state=True'를 사용하여 모든 세션 상태를 깔끔하게 초기화합니다.
 if st.button("🔄 게임 리셋", help="현재 진행 중인 게임을 리셋하고 초기화합니다."):
-    st.session_state.game_mode = None
-    st.session_state.mission = None
-    st.session_state.attempt = 0
-    st.session_state.guess_history = []
-    st.session_state.selected_length = None
-    st.rerun() # 게임 상태를 완전히 초기화하기 위해 명시적으로 재실행
+    st.rerun(clear_session_state=True)
 
 # 게임 모드 선택
 if st.session_state.game_mode is None:
@@ -91,11 +86,11 @@ if st.session_state.game_mode is None:
     with col1:
         if st.button("🔢 숫자 모드", use_container_width=True):
             st.session_state.game_mode = "숫자"
-            # st.rerun() # 여기서는 제거합니다. Streamlit이 상태 변경을 감지하고 자동으로 재실행합니다.
+            # Streamlit이 세션 상태 변경을 감지하고 자동으로 재실행합니다.
     with col2:
         if st.button("🔠 영어 모드", use_container_width=True):
             st.session_state.game_mode = "영어"
-            # st.rerun() # 여기서는 제거합니다. Streamlit이 상태 변경을 감지하고 자동으로 재실행합니다.
+            # Streamlit이 세션 상태 변경을 감지하고 자동으로 재실행합니다.
 else:
     st.markdown(f"### 현재 모드: **{st.session_state.game_mode} 추측 게임**")
     
@@ -115,7 +110,7 @@ else:
                 st.session_state.attempt = 0
                 st.session_state.guess_history = []
                 st.session_state.selected_length = digits
-                # st.rerun() # 여기서는 제거합니다. Streamlit이 상태 변경을 감지하고 자동으로 재실행합니다.
+                # Streamlit이 세션 상태 변경을 감지하고 자동으로 재실행합니다.
         
         if st.session_state.mission: # 미션이 설정되었다면 게임 진행
             st.markdown(f"**현재 {st.session_state.selected_length}자릿수 숫자 게임 진행 중입니다.**")
@@ -127,7 +122,7 @@ else:
             if st.button("제출", key='submit_num_guess'):
                 # 입력 유효성 검사 (길이와 숫자 여부)
                 if len(guess) == st.session_state.selected_length and guess.isdigit():
-                    if st.session_state.mission is None:
+                    if st.session_state.mission is None: # 게임 시작 버튼이 눌리지 않았다면 경고
                         st.warning("먼저 '게임 시작' 버튼을 눌러주세요.")
                     else:
                         st.session_state.attempt += 1 # 시도 횟수 증가
@@ -139,7 +134,7 @@ else:
                             st.session_state.mission = None # 미션 초기화 (새 게임 시작 준비)
                         else:
                             st.info("계속 시도해보세요!")
-                        # st.rerun() # 여기서는 제거합니다. Streamlit이 상태 변경을 감지하고 자동으로 재실행합니다.
+                        # Streamlit이 세션 상태 변경을 감지하고 자동으로 재실행합니다.
                 else:
                     st.warning(f"올바른 {st.session_state.selected_length}자리의 숫자를 입력해주세요.")
 
@@ -158,14 +153,12 @@ else:
                 filtered_words = [w for w in english_vocab if len(w) == word_length]
                 if not filtered_words: # 해당 길이의 단어가 없으면 오류 메시지
                     st.error(f"⚠️ {word_length}자 길이의 단어를 찾을 수 없습니다. 다른 길이를 선택해주세요.")
-                    # 이 경우, `st.rerun()`을 넣지 않으면 오류 메시지가 사라지지 않고 유지됩니다.
-                    # 사용자에게 다음 행동을 유도하는 방식으로는 이 편이 더 자연스러울 수 있습니다.
                 else:
                     st.session_state.mission = random.choice(filtered_words) # 무작위 단어 선택
                     st.session_state.attempt = 0
                     st.session_state.guess_history = []
                     st.session_state.selected_length = word_length
-                    # st.rerun() # 여기서는 제거합니다. Streamlit이 상태 변경을 감지하고 자동으로 재실행합니다.
+                    # Streamlit이 세션 상태 변경을 감지하고 자동으로 재실행합니다.
 
         if st.session_state.mission: # 미션이 설정되었다면 게임 진행
             st.markdown(f"**현재 {st.session_state.selected_length}자 길이의 영어 단어 게임 진행 중입니다.**")
@@ -188,7 +181,7 @@ else:
                             st.session_state.mission = None # 미션 초기화 (새 게임 시작 준비)
                         else:
                             st.info("계속 시도해보세요!")
-                        # st.rerun() # 여기서는 제거합니다. Streamlit이 상태 변경을 감지하고 자동으로 재실행합니다.
+                        # Streamlit이 세션 상태 변경을 감지하고 자동으로 재실행합니다.
                     else:
                         st.warning("존재하지 않는 단어입니다. 영어 사전에 있는 단어를 입력해주세요.")
                 else:
