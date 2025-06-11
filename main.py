@@ -45,7 +45,7 @@ def check(mission, guess):
             
     return result, correct
 
-# 초기 세션 상태 설정
+# 초기 세션 상태 설정 (항상 먼저 실행되어야 합니다)
 if 'game_mode' not in st.session_state:
     st.session_state.game_mode = None
 if 'mission' not in st.session_state:
@@ -61,15 +61,17 @@ if 'selected_length' not in st.session_state:
 st.title("🎮 숫자/영어 추측 게임")
 st.markdown("정답을 맞힐 때까지 숫자나 영어 단어를 추측해보세요! 각 문자에 대한 피드백을 받습니다.")
 
-# 리셋 버튼 (수정된 부분: st.session_state.clear() 대신 개별 변수 None 할당)
+# 리셋 버튼 (수정된 부분: 직접 삭제 후 재실행)
 if st.button("🔄 게임 리셋", help="현재 진행 중인 게임을 리셋하고 초기화합니다."):
-    st.session_state.game_mode = None
-    st.session_state.mission = None
-    st.session_state.attempt = 0
-    st.session_state.guess_history = []
-    st.session_state.selected_length = None
-    st.rerun() # <- 다시 이 방식으로 돌아갑니다.
-    st.stop() # <- st.stop()은 그대로 유지하여 깔끔한 재실행을 유도합니다.
+    # 모든 세션 상태 키를 명시적으로 삭제
+    if 'game_mode' in st.session_state: del st.session_state.game_mode
+    if 'mission' in st.session_state: del st.session_state.mission
+    if 'attempt' in st.session_state: del st.session_state.attempt
+    if 'guess_history' in st.session_state: del st.session_state.guess_history
+    if 'selected_length' in st.session_state: del st.session_state.selected_length
+    
+    st.rerun() # 삭제 후 재실행하면, 스크립트 상단의 초기화 로직이 다시 실행되어 키를 재설정합니다.
+    st.stop() 
 
 # 게임 모드 선택
 if st.session_state.game_mode is None:
