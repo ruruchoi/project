@@ -1,3 +1,2 @@
 ﻿streamlit
 nltk
-python-docx
