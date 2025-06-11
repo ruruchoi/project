@@ -6,10 +6,19 @@ from nltk.corpus import words
 from collections import Counter
 
 # NLTK 단어 사전 다운로드
+# DownloadError 대신 더 일반적인 예외인 LookupError를 사용하거나,
+# 단순히 NLTK 데이터가 없는 경우를 처리하는 방식으로 변경합니다.
 try:
+    # 'words' 코퍼스가 설치되어 있는지 확인
     nltk.data.find('corpora/words')
-except nltk.downloader.DownloadError:
+except LookupError: # NLTK 데이터를 찾을 수 없을 때 발생하는 예외
+    # 코퍼스가 없으면 다운로드
+    st.info("NLTK 'words' 코퍼스를 다운로드 중입니다. 잠시 기다려 주세요.")
     nltk.download('words')
+    st.success("NLTK 'words' 코퍼스 다운로드가 완료되었습니다!")
+except Exception as e: # 그 외 모든 예외를 잡는 경우 (보다 일반적인 처리)
+    st.error(f"NLTK 데이터 다운로드 중 예상치 못한 오류가 발생했습니다: {e}")
+
 
 # 영어 단어 사전 로드 (NLTK 사용)
 english_vocab = [word.lower() for word in words.words() if 4 <= len(word) <= 10 and word.isalpha()]
@@ -61,7 +70,7 @@ if 'selected_length' not in st.session_state:
 st.title("🎮 숫자/영어 추측 게임")
 st.markdown("정답을 맞힐 때까지 숫자나 영어 단어를 추측해보세요! 각 문자에 대한 피드백을 받습니다.")
 
-# 리셋 버튼 (수정된 부분: 직접 삭제 후 재실행)
+# 리셋 버튼 (직접 삭제 후 재실행)
 if st.button("🔄 게임 리셋", help="현재 진행 중인 게임을 리셋하고 초기화합니다."):
     # 모든 세션 상태 키를 명시적으로 삭제
     if 'game_mode' in st.session_state: del st.session_state.game_mode
