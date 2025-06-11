@@ -4,6 +4,7 @@ import re
 import nltk
 from nltk.corpus import words
 from collections import Counter
+from docx import Document
 
 # nltk 단어 다운로드 (최초 1회만 필요)
 nltk.download('words')
@@ -16,19 +17,19 @@ def make_num(digits):
         num += str(random.randint(0, 9))
     return num
 
-# 영어 단어 리스트 생성
+# .docx 파일에서 단어 리스트 생성
 @st.cache_data
-def make_word(filename):
+def load_words_from_docx(file_path):
+    doc = Document(file_path)
     word_list = []
-    with open(filename, encoding='utf-8') as f:
-        for line in f:
-            match = re.match(r'\d+\s+([a-zA-Z\(\)]+)', line)
-            if match:
-                word = match.group(1).split('(')[0].lower()
-                word_list.append(word)
+    for para in doc.paragraphs:
+        match = re.match(r'\d+\s+([a-zA-Z\(\)]+)', para.text)
+        if match:
+            word = match.group(1).split('(')[0].lower()
+            word_list.append(word)
     return word_list
 
-# 공통 비교 함수
+# 비교 함수
 def check(mission, guess):
     length = len(mission)
     result = [''] * length
@@ -99,7 +100,7 @@ if st.session_state.game_mode == "숫자":
 
 # 영어 모드
 elif st.session_state.game_mode == "영어":
-    word_list = make_word("english_word.txt")
+    word_list = load_words_from_docx("/mnt/data/english_word.docx")
     if st.button("게임 시작") and st.session_state.mission is None:
         st.session_state.mission = random.choice(word_list)
         st.session_state.attempt = 0
