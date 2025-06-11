@@ -71,7 +71,7 @@ if 'guess_history' not in st.session_state:
 st.title("🎮 숫자/영어 추측 게임")
 
 # 리셋 버튼 (언제나 노출)
-if st.button("🔄 게임 리셋"):
+if st.button("🔄 게임 리셋", key="reset_button"):
     st.session_state.game_mode = None
     st.session_state.mission = None
     st.session_state.attempt = 0
